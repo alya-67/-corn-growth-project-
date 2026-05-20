@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculus in Bioscience: Malaysian Strawberry Growth Dynamics</title>
+    <!-- Chart.js and Tailwind CSS via reliable CDNs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between">
+
+    <!-- Header Navigation -->
+    <header class="bg-emerald-800 text-white shadow-md py-5 px-6">
+        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div>
+                <span class="bg-emerald-600 text-xs font-bold px-2.5 py-1 rounded-full tracking-wide uppercase">Agro Product Technology (SFP)</span>
+                <h1 class="text-2xl font-bold mt-1 tracking-tight">Application of Derivatives in Strawberry Growth Analytics</h1>
+            </div>
+            <div class="text-right sm:text-right text-sm text-emerald-100">
+                <p class="font-medium">Location Paradigm: Cameron Highlands, Malaysia</p>
+                <p class="text-xs opacity-75">Greenhouse Control Focus (20°C / 70% RH)</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-6xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex-grow grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Left Dashboard Panel: Context, Formulas & Click Readout -->
+        <div class="lg:col-span-1 flex flex-col gap-6">
+            
+            <!-- Bioscience Scenario Context Box -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                <h2 class="text-lg font-semibold text-slate-900 border-b border-slate-100 pb-2 mb-3 flex items-center gap-2">
+                    🌱 The Bioscience Problem
+                </h2>
+                <p class="text-sm text-slate-600 leading-relaxed">
+                    In precision agro-processing and product technology, predicting peak biomass production rates helps agronomists optimize nutrient feeding frequencies (adjusting EC levels from 1.3 to 5.0 dS/m as standardized by <strong>MARDI</strong>). Using a logistic growth model calibrated to Malaysian climate conditions, we apply differential calculus to locate the precise week where the plant experiences its maximum physiological growth acceleration.
+                </p>
+            </div>
+
+            <!-- Calculus Formulas Box -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                <h2 class="text-lg font-semibold text-slate-900 border-b border-slate-100 pb-2 mb-3">
+                    📐 Mathematical Modeling
+                </h2>
+                <div class="space-y-4 text-sm">
+                    <div>
+                        <span class="block font-medium text-slate-500 text-xs uppercase tracking-wider">Cumulative Plant Dry Weight $f(x)$</span>
+                        <div class="bg-slate-50 font-mono text-center p-2.5 my-1 rounded border border-slate-100 font-semibold text-emerald-800">
+                            f(x) = L / (1 + e<sup>-k(x - x₀)</sup>)
+                        </div>
+                        <p class="text-xs text-slate-500 italic">Parameters: max potential weight L=20g; rate factor k=0.5; mid-point x₀=8 weeks</p>
+                    </div>
+                    <div>
+                        <span class="block font-medium text-slate-500 text-xs uppercase tracking-wider">Instantaneous Growth Rate $f'(x)$ (Derivative)</span>
+                        <div class="bg-slate-50 font-mono text-center p-2.5 my-1 rounded border border-slate-100 font-semibold text-rose-700">
+                            f'(x) = (L · k · e<sup>-k(x - x₀)</sup>) / (1 + e<sup>-k(x - x₀)</sup>)<sup>2</sup>
+                        </div>
+                        <p class="text-xs text-slate-500">Calculates exact biomass accumulation speed in <strong>grams per week</strong> at any given instance.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dynamic Interactive Analytics Box -->
+            <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-xl shadow-md p-5 flex-grow flex flex-col justify-between min-h-[220px]">
+                <div>
+                    <h2 class="text-xs font-bold tracking-widest text-emerald-400 uppercase mb-1">Interactive Telemetry</h2>
+                    <h3 class="text-lg font-semibold tracking-tight border-b border-slate-700 pb-2 mb-3">Calculated Rate of Change</h3>
+                </div>
+                
+                <!-- Fallback prompt message when no point is selected -->
+                <div id="prompt-message" class="text-center py-6 text-slate-400 text-sm">
+                    🖱️ Click anywhere on the graph area to evaluate the local derivative and obtain a real-time agricultural translation.
+                </div>
+
+                <!-- Dynamic Data View Wrapper hidden by default -->
+                <div id="data-display" class="hidden space-y-4">
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="bg-slate-800/50 p-2 rounded border border-slate-700/40">
+                            <span class="text-[10px] text-slate-400 block uppercase font-semibold">Timeline Point</span>
+                            <span id="readout-x" class="text-lg font-bold text-white">Week 0</span>
+                        </div>
+                        <div class="bg-slate-800/50 p-2 rounded border border-slate-700/40">
+                            <span class="text-[10px] text-slate-400 block uppercase font-semibold">Total Mass $f(x)$</span>
+                            <span id="readout-y" class="text-lg font-bold text-emerald-400">0.00 g</span>
+                        </div>
+                    </div>
+                    <div class="bg-rose-950/30 border border-rose-900/50 p-3 rounded-lg">
+                        <span class="text-[10px] text-rose-400 block uppercase font-bold tracking-wider">Derivative Value $f'(x)$</span>
+                        <div class="text-xl font-black text-rose-400 font-mono" id="readout-derivative">0.00 g/week</div>
+                    </div>
+                    <div>
+                        <span class="text-[10px] text-slate-400 block uppercase font-semibold mb-1">Layman Bioscience Analysis</span>
+                        <p id="readout-explain" class="text-xs text-slate-300 leading-relaxed bg-slate-950/40 p-2.5 rounded border border-slate-800"></p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Dashboard Panel: Graphical Area Visualization -->
+        <div class="lg:col-span-2 flex flex-col gap-4 bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-6">
+            <div class="flex justify-between items-start sm:items-center flex-col sm:flex-row gap-2 border-b border-slate-100 pb-3 mb-2">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-900">Crop Canopy Accumulation Curve</h2>
+                    <p class="text-xs text-slate-500">Dual-axis rendering of absolute dry mass vs daily physiological production speed</p>
+                </div>
+                <div class="flex items-center gap-4 text-xs font-medium">
+                    <span class="flex items-center gap-1.5"><span class="w-3 h-3 bg-emerald-600 rounded-full inline-block"></span>Biomass (g)</span>
+                    <span class="flex items-center gap-1.5"><span class="w-3 h-3 bg-rose-500 rounded-full inline-block"></span>Rate (g/wk)</span>
+                </div>
+            </div>
+
+            <!-- Canvas for Chart.js Rendering -->
+            <div class="relative flex-grow min-h-[350px] sm:min-h-[420px] w-full">
+                <canvas id="growthChart"></canvas>
+            </div>
+            
+            <div class="text-[11px] text-slate-400 flex flex-wrap gap-x-4 gap-y-1 justify-end border-t border-slate-100 pt-3">
+                <span><strong>Data References:</strong> MARDI Agro-Technology Advisory Hub</span>
+                <span>•</span>
+                <span>PMC8182427 (Strawberry Media Trials)</span>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer System Data Meta -->
+    <footer class="bg-slate-900 text-slate-500 text-center py-4 text-xs border-t border-slate-800">
+        <div class="max-w-6xl mx-auto px-4">
+            SFP: Agro Product Technology Framework • Simulated Sandbox Application via Chart.js v4
+        </div>
+    </footer>
+
+    <!-- Core Interactive Application Logic Script -->
+    <script>
+        // Constants matching typical greenhouse logistic growth patterns for local strawberry varieties
+        const L = 20;    // Asymptotic upper ceiling of vegetative/early reproductive weight in grams
+        const k = 0.5;   // Growth steepness rate parameter 
+        const x0 = 8;    // Midpoint inflection target (Week 8)
+
+        // Mathematical Function Generator for Cumulative Curve: f(x)
+        function f(x) {
+            return L / (1 + Math.exp(-k * (x - x0)));
+        }
+
+        // Analytical First Derivative Formula: f'(x)
+        function f_prime(x) {
+            const expTerm = Math.exp(-k * (x - x0));
+            return (L * k * expTerm) / Math.pow(1 + expTerm, 2);
+        }
+
+        // Generate high-resolution structural array over a 16 week lifecycle step-sampled by 0.2 weeks
+        const weeksLabels = [];
+        const biomassData = [];
+        const growthRateData = [];
+
+        for (let w = 0; w <= 16; w = parseFloat((w + 0.2).toFixed(1))) {
+            weeksLabels.push(w);
+            biomassData.push(f(w));
+            growthRateData.push(f_prime(w));
+        }
+
+        // Initialize Chart.js configuration context
+        const ctx = document.getElementById('growthChart').getContext('2d');
+        const growthChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: weeksLabels,
+                datasets: [
+                    {
+                        label: 'Cumulative Plant Dry Weight f(x) [g]',
+                        data: biomassData,
+                        borderColor: '#059669', // Emerald 600
+                        backgroundColor: 'rgba(5, 150, 105, 0.04)',
+                        borderWidth: 3,
+                        pointRadius: 0,
+                        pointHoverRadius: 6,
+                        yAxisID: 'yBiomass',
+                        fill: true,
+                        tension: 0.1
+                    },
+                    {
+                        label: "Instantaneous Growth Rate f'(x) [g/week]",
+                        data: growthRateData,
+                        borderColor: '#f43f5e', // Rose 500
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        pointRadius: 0,
+                        pointHoverRadius: 6,
+                        yAxisID: 'yRate',
+                        tension: 0.1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                plugins: {
+                    legend: { display: false } // Hidden as custom legend headers are clean-coded above
+                },
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Plant Development Timeline (Weeks)', color: '#475569', font: { weight: 'bold', size: 11 } },
+                        grid: { color: '#f1f5f9' },
+                        ticks: { color: '#64748b' }
+                    },
+                    yBiomass: {
+                        type: 'linear',
+                        position: 'left',
+                        title: { display: true, text: 'Cumulative Absolute Biomass (g)', color: '#059669', font: { weight: 'bold', size: 11 } },
+                        min: 0,
+                        max: 22,
+                        ticks: { color: '#64748b' },
+                        grid: { color: '#f1f5f9' }
+                    },
+                    yRate: {
+                        type: 'linear',
+                        position: 'right',
+                        title: { display: true, text: 'Growth Rate Velocity f\'(x) (g/week)', color: '#f43f5e', font: { weight: 'bold', size: 11 } },
+                        min: 0,
+                        max: 3,
+                        ticks: { color: '#64748b' },
+                        grid: { drawOnChartArea: false } // Avoid grid lines clashing
+                    }
+                },
+                // Capture element canvas click trigger mapping to exact mathematical data targets
+                onClick: (e) => {
+                    const points = growthChart.getElementsAtEventForMode(e, 'index', { intersect: false }, true);
+                    if (points.length > 0) {
+                        const targetIndex = points[0].index;
+                        const xVal = weeksLabels[targetIndex];
+                        const yVal = biomassData[targetIndex];
+                        const devVal = growthRateData[targetIndex];
+                        
+                        updateTelemetryDisplay(xVal, yVal, devVal);
+                    }
+                }
+            }
+        });
+
+        // Function that alters DOM values dynamically upon click events with layman bioscience context translation
+        function updateTelemetryDisplay(week, mass, derivative) {
+            document.getElementById('prompt-message').classList.add('hidden');
+            document.getElementById('data-display').classList.remove('hidden');
+
+            document.getElementById('readout-x').innerText = `Week ${week.toFixed(1)}`;
+            document.getElementById('readout-y').innerText = `${mass.toFixed(2)} g`;
+            document.getElementById('readout-derivative').innerText = `+${derivative.toFixed(3)} g / week`;
+
+            let explanation = "";
+            if (week < 5) {
+                explanation = "The seedling is currently in its early lag phase focusing heavily on root architecture establishment. The biological rate of change is low but climbing because structural tissue size is small.";
+            } else if (week >= 5 && week <= 7.8) {
+                explanation = "Vegetative acceleration phase. Total leaf surface expansion is driving extreme photosynthetic capacity. The derivative is skyrocketing, meaning the plant builds structural weight faster every single day.";
+            } else if (week > 7.8 && week <= 8.2) {
+                explanation = "CRITICAL INFLECTION POINT (Maximum Value of f'(x)). The derivative peaks here. The strawberry bush is working at absolute maximum metabolic efficiency, generating mass at its maximum physical velocity before transitioning chemical resources toward flowering.";
+            } else if (week > 8.2 && week <= 12) {
+                explanation = "Deceleration phase. Although cumulative mass f(x) continues increasing, the velocity derivative f'(x) begins to plunge. Why? Physiological energy is shifting radically from growing new leaves toward swelling sweet berries.";
+            } else {
+                explanation = "Asymptotic maturation saturation phase. The derivative approaches near-zero. Vegetative growth completely flatlines as fruits hit commercial harvesting ripeness targets.";
+            }
+
+            document.getElementById('readout-explain').innerHTML = explanation;
+        }
+    </script>
+</body>
+</html>
